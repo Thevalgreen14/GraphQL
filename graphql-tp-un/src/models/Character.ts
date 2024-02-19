@@ -4,5 +4,14 @@ export interface Character {
 	__typename: string;
 	status : string;
 	species : string;
-	type : string
+	type : string;
+	location:
+	{
+		name: string,
+	};
+	origin:
+	{
+		name: string,
+	};
+	image: string;
 }

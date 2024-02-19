@@ -1,19 +1,5 @@
 <template>
 	<div>
-		<h1>Personnages de Rick and Morty</h1>
-		<ul>
-			<li v-for="character in characters" :key="character.id" @click="loadCharacterDetails(character.id)">
-				{{ character.name }}
-			</li>
-		</ul>
-
-		<div v-if="selectedCharacter">
-			<h2>Details for {{ selectedCharacter.name }}</h2>
-			<p>Status: {{ selectedCharacter.status }}</p>
-			<p>Species: {{ selectedCharacter.species }}</p>
-			<p>Type: {{ selectedCharacter.type }}</p>
-		</div>
-
 		<div>
 			<button @click="loadPage(currentPage - 1)" :disabled="currentPage === 1 || loading">
 				Précédent
@@ -22,6 +8,27 @@
 			<button @click="loadPage(currentPage + 1)" :disabled="currentPage === totalPages || loading">
 				Suivant
 			</button>
+		</div>
+
+		<div class="container">
+			<div class="list-container">
+				<h1>Personnages de Rick and Morty</h1>
+				<ul>
+					<li v-for="character in characters" :key="character.id" @click="loadCharacterDetails(character.id)">
+						{{ character.name }}
+					</li>
+				</ul>
+			</div>
+
+			<div v-if="selectedCharacter" class="details-container">
+				<h2>Details for {{ selectedCharacter.name }}</h2>
+				<p>Status: {{ selectedCharacter.status }}</p>
+				<p>Species: {{ selectedCharacter.species }}</p>
+				<p>Type: {{ selectedCharacter.type }}</p>
+				<p>Location: {{ selectedCharacter.location.name }}</p>
+				<p>Origin: {{ selectedCharacter.origin.name }}</p>
+				<img :src="selectedCharacter.image" alt="Character image" />
+			</div>
 		</div>
 	</div>
 </template>
@@ -43,11 +50,18 @@ const GET_CHARACTERS = gql`
 			}
 
 			results {
-				name,
-				id,
-				status,
-				species,
-				type ,
+				name
+				id
+				status
+				species
+				type 
+				location {
+					name 
+				}
+				image
+				origin {
+					name
+				}
 				__typename
 			}
 		}
@@ -86,12 +100,12 @@ export default defineComponent({
 		};
 
 		const loadCharacterDetails = async (id: number) => {
-				const { data } = await refetch({ id }) as { data: CharactersQueryResult };
-				if (data && data.characters) {
-					const foundCharacter = data.characters.results.find(x => x.id === id);
-					selectedCharacter.value = foundCharacter || null;
-				} else {
-					selectedCharacter.value = null; 
+			const { data } = await refetch({ id }) as { data: CharactersQueryResult };
+			if (data && data.characters) {
+				const foundCharacter = data.characters.results.find(x => x.id === id);
+				selectedCharacter.value = foundCharacter || null;
+			} else {
+				selectedCharacter.value = null;
 			};
 		};
 
@@ -109,8 +123,25 @@ export default defineComponent({
 </script>
 
 <style>
-ul {
-	list-style-type: none;
-	cursor: pointer;
-}
+	ul {
+		list-style-type: none;
+		cursor: pointer;
+	}
+	.container {
+		display: flex;
+	}
+	
+	.list-container {
+		flex: 1;
+		margin-right: 20px; /* Adjust margin as needed */
+	}
+	
+	.details-container {
+		flex: 1;
+	}
+
+	button {
+		margin: 10px;
+	}
+	
 </style>
