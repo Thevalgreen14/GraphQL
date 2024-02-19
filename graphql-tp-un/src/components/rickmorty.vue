@@ -37,15 +37,7 @@ const GET_CHARACTERS = gql`
 				id
 				__typename
 			}
-			__typename
 		}
-		results {
-		  id
-		  name
-		  __typename
-		}
-		__typename
-	  }
 	}
 `;
 
