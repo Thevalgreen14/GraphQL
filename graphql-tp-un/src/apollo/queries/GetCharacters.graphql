@@ -1,0 +1,13 @@
+query($page: Int) {
+	characters(page: $page) {
+		info {
+			count
+			pages
+		}
+		results {
+			name
+			__typename
+		}
+		__typename
+	}
+}
