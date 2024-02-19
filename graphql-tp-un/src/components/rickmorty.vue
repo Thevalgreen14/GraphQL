@@ -27,19 +27,20 @@ import { CharactersQueryResult } from '../models/CharactersQueryResult';
 
 const GET_CHARACTERS = gql`
 	query($page: Int) {
-	  characters(page: $page) {
-		info {
-		  count
-		  pages
+		characters(page: $page) {
+			info {
+				count
+				pages
+			}
+			results {
+				name,
+				id
+				__typename
+			}
+			__typename
 		}
-		results {
-		  name
-		  __typename
-		}
-		__typename
-	  }
 	}
-  `;
+`;
 
 export default defineComponent({
 	setup() {
