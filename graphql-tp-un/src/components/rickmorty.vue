@@ -39,7 +39,6 @@ const GET_CHARACTERS = gql`
 			}
 			__typename
 		}
-<<<<<<< HEAD
 		results {
 		  id
 		  name
@@ -47,8 +46,6 @@ const GET_CHARACTERS = gql`
 		}
 		__typename
 	  }
-=======
->>>>>>> 6dc8e8c408c29cebd5c1019a5a3a401b7d0f43ff
 	}
 `;
 
