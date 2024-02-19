@@ -60,9 +60,17 @@ export default defineComponent({
 			if (page >= 1 && page <= totalPages.value) {
 				currentPage.value = page;
 				const newResult = await refetch({ page });
-				characters.value = newResult.data.characters.results;
-				totalPages.value = newResult.data.characters.info.pages;
+				
+				if (newResult && newResult.data && newResult.data.characters) {
+					characters.value = newResult.data.characters.results;
+				}
+
+				if (newResult && newResult.data && newResult.data.characters) {
+					totalPages.value = newResult.data.characters.info.pages;
+				}
+
 			}
+			
 		};
 
 		return {
@@ -75,4 +83,3 @@ export default defineComponent({
 	},
 });
 </script>
-  
