@@ -3,7 +3,7 @@
 	<div>
 		<h1>Personnages de Rick and Morty</h1>
 		<ul>
-			<li v-for="character in characters" :key="character.name">
+			<li v-for="character in characters" :key="character.id">
 				{{ character.name }}
 			</li>
 		</ul>
@@ -18,7 +18,7 @@
 		</div>
 	</div>
 </template>
-  
+
 <script lang="ts">
 import { defineComponent, ref, watchEffect } from 'vue';
 import { useQuery } from '@vue/apollo-composable';
@@ -60,7 +60,7 @@ export default defineComponent({
 			if (page >= 1 && page <= totalPages.value) {
 				currentPage.value = page;
 				const newResult = await refetch({ page });
-				
+
 				if (newResult && newResult.data && newResult.data.characters) {
 					characters.value = newResult.data.characters.results;
 				}
