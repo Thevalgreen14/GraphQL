@@ -1,12 +1,19 @@
-<!-- components/RickMorty.vue -->
 <template>
 	<div>
 		<h1>Personnages de Rick and Morty</h1>
 		<ul>
-			<li v-for="character in characters" :key="character.id">
+			<li v-for="character in characters" :key="character.id" @click="loadCharacterDetails(character.id)">
 				{{ character.name }}
 			</li>
 		</ul>
+
+		<div v-if="selectedCharacter">
+			<h2>Details for {{ selectedCharacter.name }}</h2>
+			<p>Status: {{ selectedCharacter.status }}</p>
+			<p>Species: {{ selectedCharacter.species }}</p>
+			<p>Type: {{ selectedCharacter.type }}</p>
+		</div>
+
 		<div>
 			<button @click="loadPage(currentPage - 1)" :disabled="currentPage === 1 || loading">
 				Précédent
@@ -24,17 +31,23 @@ import { defineComponent, ref, watchEffect } from 'vue';
 import { useQuery } from '@vue/apollo-composable';
 import gql from 'graphql-tag';
 import { CharactersQueryResult } from '../models/CharactersQueryResult';
+import { Character } from '../models/Character';
 
 const GET_CHARACTERS = gql`
 	query($page: Int) {
 		characters(page: $page) {
+
 			info {
 				count
 				pages
 			}
+
 			results {
 				name,
-				id
+				id,
+				status,
+				species,
+				type ,
 				__typename
 			}
 		}
@@ -48,6 +61,7 @@ export default defineComponent({
 
 		const characters = ref(result.value?.characters.results || []);
 		const totalPages = ref(result.value?.characters.info.pages || 1);
+		const selectedCharacter = ref<Character | null>(null);
 
 		watchEffect(() => {
 			if (result.value && result.value.characters) {
@@ -68,9 +82,17 @@ export default defineComponent({
 				if (newResult && newResult.data && newResult.data.characters) {
 					totalPages.value = newResult.data.characters.info.pages;
 				}
-
 			}
-			
+		};
+
+		const loadCharacterDetails = async (id: number) => {
+				const { data } = await refetch({ id }) as { data: CharactersQueryResult };
+				if (data && data.characters) {
+					const foundCharacter = data.characters.results.find(x => x.id === id);
+					selectedCharacter.value = foundCharacter || null;
+				} else {
+					selectedCharacter.value = null; 
+			};
 		};
 
 		return {
@@ -79,6 +101,8 @@ export default defineComponent({
 			totalPages,
 			loadPage,
 			loading,
+			selectedCharacter,
+			loadCharacterDetails,
 		};
 	},
 });
@@ -86,6 +110,7 @@ export default defineComponent({
 
 <style>
 ul {
-  list-style-type: none;
+	list-style-type: none;
+	cursor: pointer;
 }
 </style>
