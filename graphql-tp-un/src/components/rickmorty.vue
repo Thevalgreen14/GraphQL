@@ -33,6 +33,7 @@ const GET_CHARACTERS = gql`
 		  pages
 		}
 		results {
+		  id
 		  name
 		  __typename
 		}
@@ -83,3 +84,9 @@ export default defineComponent({
 	},
 });
 </script>
+
+<style>
+ul {
+  list-style-type: none;
+}
+</style>
